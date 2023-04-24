@@ -12,6 +12,13 @@ const createTuit = async (req, res) => {
     // newTuit._id = new Date().getTime() + ''; // ID created by database instead
     newTuit.likes = 0;
     newTuit.liked = false;
+    newTuit.dislikes = 0;
+    newTuit.disliked = false;
+    newTuit.replies = 0;
+    newTuit.retuits = 0;
+    newTuit.time = 'just now';
+    newTuit.topic = 'Personal';
+    newTuit.title = 'Personal tuit';
     // tuits.push(newTuit); // append new Tuit to the tuit array // not using array anymore
     const insertedTuit = await tuitsDao.createTuit(newTuit); // actual tuit inserted in database with DAO's createTuit
     res.json(insertedTuit); // respond new Tuit json to the client
@@ -31,24 +38,19 @@ const findTuits = async (req, res) => {
  * based on the request body.
  */
 const updateTuit = async (req, res) => {
-    const tarTuitId = req.params.tid;
-    const updateContent = req.body;
-    // tuits = tuits.map((t) => (t._id === tarTuitId ? { ...t, ...updateContent } : t));
-    // const tarIndex = tuits.findIndex((t) => t._id === tarTuitId);
-    // tuits[tarIndex] = { ...tuits[tarIndex], ...updateContent };
-    const status = await tuitsDao.updateTuit(tarTuitId, updateContent);
-    res.sendStatus(status);
+    const tuitdIdToUpdate = req.params.tid;
+    const updates = req.body;
+    const status = await tuitsDao.updateTuit(tuitdIdToUpdate, updates);
+    res.json(status);
 };
 
 /**
  * Delete the tuit with the specified tid parameter in the URL
  */
 const deleteTuit = async (req, res) => {
-    const tarTuitId = req.params.tid; // retrieve the ID of the tuit we want to remove
-    // no longer using array
-    // tuits = tuits.filter((tuit) => tuit._id !== tarTuitId); // // filter out the tuit from the tuits array
-    const status = await tuitsDao.deleteTuit(tarTuitId); // status reports success or failure
-    res.sendStatus(status);
+    const tuitdIdToDelete = req.params.tid;
+    const status = await tuitsDao.deleteTuit(tuitdIdToDelete);
+    res.json(status);
 };
 
 const TuitsController = (app) => {
